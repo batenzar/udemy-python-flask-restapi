@@ -14,6 +14,14 @@ store = [
     }
 ]
 
+
+# Setup router
+# CAUTION: 
+# 1. if the parameters do not match the url template, 
+# python will not throw any error.
+# Web server will start normally like there is no error.
+#
+
 # POST /store data: {name: }
 # Insert new store
 @app.route('/store', methods=['POST'])
@@ -36,14 +44,14 @@ def get_stores():
 
 # POST /store/<string:name>/item
 # Insert an item to store
-@app.route('/store/<string:name>/item', ) 
-def create_item_in_store():
+@app.route('/store/<string:name>/item', methods=['POST']) 
+def create_item_in_store(name):
     pass
 
 # GET /store/<string:name>/item
 # Return items in store
 @app.route('/store/<string:name>/item') 
-def get_items_in_store():
+def get_items_in_store(name):
     pass
 
 app.run(port=5000)    
