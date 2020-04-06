@@ -1,5 +1,5 @@
 from flask import Flask, request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required # Step 1.1 - import JWT (pip install flask-jwt)
 from security import authenticate,identity # Step 4.2 import security from security.py
 
@@ -45,7 +45,20 @@ class Item(Resource):
 
     # update or create
     def put(self, name):
-        data = request.get_json()
+        parser = reqparse.RequestParser()
+        # add argument to check
+        parser.add_argument('price', 
+            type=float, 
+            required=True, 
+            help="This field cannot be left blank!"
+        )
+
+        data = parser.parse_args() # replace 'data = request.get_json()'
+
+        # If you try to print arugment that not defined, reqparse will throw KeyError
+        # Even though it is in the JSON payload
+        # print(data['anotherfield'])
+
         item = next(filter(lambda x: x['name'] == name, items), None)
         if item is None:
             # insert
