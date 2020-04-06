@@ -20,6 +20,14 @@ jwt = JWT(app, authenticate, identity) # this line automatically create '/auth'
 items = []
 
 class Item(Resource):
+    # declare parser as static variable of Item class
+    parser = reqparse.RequestParser()
+    parser.add_argument('price', 
+        type=float, 
+        required=True, 
+        help="This field cannot be left blank!"
+    )
+
     @jwt_required() # Step 5 - add decoration to http method for authen before calling method
     def get(self, name):
         item = next(filter(lambda x : x['name'] == name, items))
@@ -30,7 +38,7 @@ class Item(Resource):
         if next(filter(lambda x: x['name'] == name, items), None):
             return {'msg': "An item with name '{}' already exists.".format(name)}, 400
 
-        data = request.get_json()
+        data = Item.parser.parse_args()
         item = {'name' : name, 'price': data['price']}
         items.append(item)
         return item, 201
@@ -45,15 +53,7 @@ class Item(Resource):
 
     # update or create
     def put(self, name):
-        parser = reqparse.RequestParser()
-        # add argument to check
-        parser.add_argument('price', 
-            type=float, 
-            required=True, 
-            help="This field cannot be left blank!"
-        )
-
-        data = parser.parse_args() # replace 'data = request.get_json()'
+        data = Item.parser.parse_args() # replace 'data = request.get_json()'
 
         # If you try to print arugment that not defined, reqparse will throw KeyError
         # Even though it is in the JSON payload
