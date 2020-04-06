@@ -34,6 +34,15 @@ class Item(Resource):
         items.append(item)
         return item, 201
 
+    def delete(self, name):
+        global items
+        # don't forgot about variable scope
+        # don't name this variable as 'items' it will shadowing the outer variable!!
+        # use must declard 'global items' first to ensure that it will use outer variable
+        items = list(filter(lambda x: x['name'] != name, items))
+        return {'msg': 'Item deleted'}
+        
+
 class ItemList(Resource):
     def get(self):
         return {'items': items}
