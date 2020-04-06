@@ -25,6 +25,7 @@ class Item(Resource):
         item = next(filter(lambda x : x['name'] == name, items))
         return {'item': item}, 200 if item else 404
 
+    # create only. if exists, throw error
     def post(self, name):
         if next(filter(lambda x: x['name'] == name, items), None):
             return {'msg': "An item with name '{}' already exists.".format(name)}, 400
@@ -41,7 +42,18 @@ class Item(Resource):
         # use must declard 'global items' first to ensure that it will use outer variable
         items = list(filter(lambda x: x['name'] != name, items))
         return {'msg': 'Item deleted'}
-        
+
+    # update or create
+    def put(self, name):
+        data = request.get_json()
+        item = next(filter(lambda x: x['name'] == name, items), None)
+        if item is None:
+            # insert
+            item = {'name':name,'price':data['price']}
+            items.append(item)
+        else:
+            item.update(data)
+        return item
 
 class ItemList(Resource):
     def get(self):
