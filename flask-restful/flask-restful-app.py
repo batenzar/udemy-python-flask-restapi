@@ -8,16 +8,20 @@ items = []
 
 class Item(Resource):
     def get(self, name):
-        for i in items:
-            if i['name'] == name:
-                return i
-        return {'msg': 'Item not found'}, 404 # 404 is the http code that you want python to see.
+        # next is like iterator.next(). This method use on collection
+        item = next(filter(lambda x : x['name'] == name, items))
+        return {'item': item}, 200 if item else 404 # return 200 and json item if found
+        
+        #return {'msg': 'Item not found'}, 404 # 404 is the http code that you want python to see.
 
     def post(self, name):
+        if next(filter(lambda x: x['name'] == name, items), None):
+            return {'msg': "An item with name '{}' already exists.".format(name)}, 400
+
         data = request.get_json()
         #data = request.get_json(force=True) # ignore content-type in header, it always converted to json
         #data = request.get_json(silent=True) # do not throw error when parsing failed. Just display empty page.
-        item = {'name' : name, 'price': 12.00}
+        item = {'name' : name, 'price': data['price']}
         items.append(item)
         return item, 201 # 201 - Created Successful, 202 - Create request accepted. (Migth not be created immediatly)
 
