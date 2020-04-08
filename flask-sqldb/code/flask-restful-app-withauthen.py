@@ -1,10 +1,11 @@
-## make sure to run at 'flask-sqldb/' not 'flask-sqldb/code'
-# because the program will not be able to find data.db
-#  Command to run: python .\code\flask-restful-app-withauthen.py
+## We have code to create db.
+# So, we can run python from 'code/' folder now
+# (Make sure to create_tables.py first to create data.db)
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 from security import authenticate,identity
+from user import UserRegister
 
 app = Flask(__name__)
 app.secret_key = 'jose'
@@ -60,5 +61,6 @@ class ItemList(Resource):
 
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
+api.add_resource(UserRegister, '/register')
 
 app.run(port=5000, debug=True)
