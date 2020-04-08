@@ -23,4 +23,8 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
 
-app.run(port=5000, debug=True)
+# Prevent app to run when other python files import this file.
+# When run an app, python will assign name of module. 
+# The module that run first will be '__main__'
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
