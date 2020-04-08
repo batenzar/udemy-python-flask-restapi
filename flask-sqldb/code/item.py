@@ -42,8 +42,7 @@ class Item(Resource):
         cursor = connection.cursor()
 
         query = "INSERT INTO items VALUES (?,?)"
-        result = cursor.execute(query, (item['name'], item['price']))
-        row = result.fetchone()
+        cursor.execute(query, (item['name'], item['price']))
 
         connection.commit()
         connection.close()
@@ -51,9 +50,15 @@ class Item(Resource):
         return item, 201
 
     def delete(self, name):
-        global items
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
 
-        items = list(filter(lambda x: x['name'] != name, items))
+        query = "DELETE FROM items WHERE name=?"
+        result = cursor.execute(query, (name,))        
+
+        connection.commit()
+        connection.close()
+
         return {'msg': 'Item deleted'}
 
     def put(self, name):
