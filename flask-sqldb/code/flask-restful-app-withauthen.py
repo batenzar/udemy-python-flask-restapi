@@ -1,3 +1,6 @@
+## make sure to run at 'flask-sqldb/' not 'flask-sqldb/code'
+# because the program will not be able to find data.db
+#  Command to run: python .\code\flask-restful-app-withauthen.py
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
