@@ -1,2 +1,2 @@
-flask-restful/venv/**
-flask-restful/**/__pycache__/**
+**/venv/**
+**/__pycache__/**
