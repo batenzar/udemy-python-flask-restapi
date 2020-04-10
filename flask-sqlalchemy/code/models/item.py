@@ -1,7 +1,14 @@
 import sqlite3
+from db import db
 
+class ItemModel(db.Model):
 
-class ItemModel:
+    __tablename__ = 'items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80)) # limit the size to 80 character
+    price = db.Column(db.Float(precision=2))
+
     def __init__(self, name, price):
         self.name = name
         self.price = price
