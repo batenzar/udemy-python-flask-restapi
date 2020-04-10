@@ -27,6 +27,13 @@ app.secret_key = 'jose'
 
 api = Api(app)
 
+# make flask SQLAlchemy automatically create db on first touching on models
+# the created table will based on configuration in models
+@app.before_request
+def create_table():
+    db.create_all()
+
+
 jwt = JWT(app, authenticate, identity)
 
 items = []
