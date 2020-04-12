@@ -47,5 +47,6 @@ api.add_resource(UserRegister, '/register')
 
 
 if __name__ == '__main__':    
-    db.init_app(app)
+    db.init_app(app)    # This line will not run in uwsgi. Because __name__ will not be __main__ in uwsgi.
+                        # Uwsgi will get app variable directly to run.
     app.run(port=5000, debug=True)
