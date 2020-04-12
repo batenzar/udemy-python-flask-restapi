@@ -1,27 +1,23 @@
 from db import db
 
-class ItemModel(db.Model):
+class StoreModel(db.Model):
 
-    __tablename__ = 'items'
+    __tablename__ = 'stores'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80)) # limit the size to 80 character
-    price = db.Column(db.Float(precision=2))
 
-    store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
-    store = db.relationship('StoreModel') # which store that item are in (1..*)
+    items = db.relationship('ItemModel', lazy='dynamic') # *..1  # 'lazy=dynamic' means do not auto retrieve item to increse performance
 
-    def __init__(self, name, price, store_id):
+    def __init__(self, name, price):
         self.name = name
-        self.price = price
-        self.store_id = store_id
 
     def json(self):
-        return {'name': self.name, 'price':self.price}
+        return {'name': self.name, 'items': [items.json() for item in self.items.all()]}
 
     @classmethod
     def find_by_name(cls, name):
-        return cls.query.filter_by(name=name).first() # "SELECT * FROM items WHERE name=? LIMIT 1"        
+        return cls.query.filter_by(name=name).first()
 
     def save_to_db(self):
         db.session.add(self) 
