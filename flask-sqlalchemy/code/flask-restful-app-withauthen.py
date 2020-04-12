@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
@@ -23,7 +25,7 @@ app = Flask(__name__)
 # has its own modification tracker
 # which is a bit better.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # turn-off tracker to increase performance because there is a tracker already in SQLALCHEMY core
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db') # read environment. If not found, use sqlite.
 app.secret_key = 'jose'
 
 api = Api(app)
