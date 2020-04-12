@@ -9,7 +9,7 @@ class StoreModel(db.Model):
 
     items = db.relationship('ItemModel', lazy='dynamic') # *..1  # 'lazy=dynamic' means do not auto retrieve item to increse performance
 
-    def __init__(self, name, price):
+    def __init__(self, name):
         self.name = name
 
     def json(self):
