@@ -10,7 +10,7 @@ from resources.store import Store, StoreList
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['PROPAGATE_EXCEPTIONS'] = True # Flask will returns the specific error to match Exception. If we don't specific the code 500 always be returned.
 app.secret_key = 'jose'
 api = Api(app)
 
