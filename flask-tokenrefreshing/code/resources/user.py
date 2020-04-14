@@ -41,3 +41,40 @@ class User(Resource):
             return {'msg': 'User not found'}, 404
         user.delete_from_db()
         return {'msg': 'User deleted'}, 200
+
+class UserLogin(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('username',
+                        type=str,
+                        required=True,
+                        help="This field cannot be blank."
+                        )
+    parser.add_argument('password',
+                        type=str,
+                        required=True,
+                        help="This field cannot be blank."
+                        ) 
+    @classmethod
+    def post(cls):
+        # get data from parser
+        data = cls.parser.parse_args()
+
+        # find user in databse
+        user = UserModel.find_by_username(data['username'])
+
+        # check password
+        if user and safe_str_cmp(user.password, data['password']):
+            # create access token
+            access_token = create_access_token(identity=user.id, fresh=True)
+            # create refresh token (we will look at this later!)           
+            refresh_token = create_refresh_token()
+             # return them
+            return {
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }, 200
+
+        return {'msg': 'Invalid credentials'}, 401
+
+        
+       
