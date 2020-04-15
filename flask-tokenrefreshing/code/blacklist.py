@@ -1,0 +1,1 @@
+BLACKLIST = {2, 3} # Blacklist user_id 2 and 3
