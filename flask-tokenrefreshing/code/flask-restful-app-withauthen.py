@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from resources.user import UserRegister, User, UserLogin, TokenRefresh
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
+from flask.json import jsonify
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
@@ -30,6 +31,29 @@ def add_claims_to_jwt(identity):
     if identity == 1: # Hard-code for sample. In real scenario, we should read from some config file or database
         return {'is_admin': True}
     return {'is_admin':False}
+
+# Tell flask-jwt-extended that when expired token has been sent to service
+# what will be sent back to user
+@jwt.expired_token_loader
+def expired_token_callback(error):
+    return jsonify({
+        'msg': 'The token has expired', 
+        'error': 'token_expired'
+    }
+    ),401
+
+#@jwt.invalid_token_loader) # call when someone sent invalid jwt
+#def invalid_token_loader_callback(error)
+
+#@jwt.unauthorized_loader # call when someone sent invalid jwt
+#def unauthorized_loader_callback(error)
+
+#@jwt.needs_fresh_token_loader # call when someone call service which need fresh but token is not fresh
+#def needs_fresh_token_loader_callback(error)
+
+#@jwt.revoked_token_loader # call when token has been invoked (Ex. when logout)
+#def revoked_token_loader_callback()
+
 
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
