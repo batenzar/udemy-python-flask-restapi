@@ -6,7 +6,19 @@
 	},
 	"item": [
 		{
-			"name": "item/name",
+			"name": "item/name (Flask-JWT)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ba0d2891-4c4b-462a-b7cd-a55226f373af",
+						"exec": [
+							"console.log(pm.environment.get(\"jwt\"))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -35,10 +47,16 @@
 			"response": []
 		},
 		{
-			"name": "items",
+			"name": "item/name (Flask-JWT-extended)",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer  {{jwt}}"
+					}
+				],
 				"url": {
 					"raw": "http://127.0.0.1:5000/item/chair",
 					"protocol": "http",
@@ -52,6 +70,57 @@
 					"path": [
 						"item",
 						"chair"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "JWT {{jwt}}"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/user/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/items",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"items"
 					]
 				}
 			},
@@ -111,7 +180,7 @@
 			"response": []
 		},
 		{
-			"name": "auth",
+			"name": "auth (Flask-JWT)",
 			"event": [
 				{
 					"listen": "test",
@@ -140,7 +209,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/auth",
+					"raw": "http://127.0.0.1:5000/login",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -150,7 +219,105 @@
 					],
 					"port": "5000",
 					"path": [
-						"auth"
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login (Flask-JWT-Extended)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5089fad-d8c3-42c4-b5f2-b15caa3afdc2",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt\", jsonData.access_token);",
+							"",
+							"pm.environment.set(\"refresh_token\", jsonData.refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"jose\",\n\t\"password\": \"asdf\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout (Flask-JWT-Extended)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5089fad-d8c3-42c4-b5f2-b15caa3afdc2",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt\", jsonData.access_token);",
+							"",
+							"pm.environment.set(\"refresh_token\", jsonData.refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer  {{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"jose\",\n\t\"password\": \"asdf\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/logout",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"logout"
 					]
 				}
 			},
@@ -163,7 +330,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"chair\",\n\t\"price\": 4.00\n}",
+					"raw": "{\n\t\"name\": \"chair\",\n\t\"price\": 4.00,\n\t\"store_id\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -183,6 +350,46 @@
 					"path": [
 						"item",
 						"chair"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer  {{refresh_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/refresh",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"refresh"
 					]
 				}
 			},
@@ -343,6 +550,38 @@
 					"path": [
 						"store",
 						"first"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/user/jose",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"jose"
 					]
 				}
 			},
