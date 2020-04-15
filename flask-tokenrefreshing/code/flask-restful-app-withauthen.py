@@ -21,6 +21,16 @@ def create_tables():
 
 jwt = JWTManager(app)
 
+
+@jwt.user_claims_loader
+def add_claims_to_jwt(identity):
+    # Uses this method to check and add some property to token
+    # The identity parameter is user_id in this case. (
+    # The user_id is in the access_token created and returned from UserLogin.post())
+    if identity == 1: # Hard-code for sample. In real scenario, we should read from some config file or database
+        return {'is_admin': True}
+    return {'is_admin':False}
+
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
 api.add_resource(Item, '/item/<string:name>')
