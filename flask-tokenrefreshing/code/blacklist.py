@@ -1,1 +1,1 @@
-BLACKLIST = {2, 3} # Blacklist user_id 2 and 3
+BLACKLIST = set() # all log-out user and blacklist will be listed here
