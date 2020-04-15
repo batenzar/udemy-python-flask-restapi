@@ -5,3 +5,7 @@ https://www.udemy.com/course/rest-api-flask-and-python/
 
 Build professional REST APIs with Python, Flask, Flask-RESTful, and Flask-SQLAlchemy
 Created by Jose Salvatierra, Teclado by Jose Salvatierra
+
+
+For complete review of the API
+https://arac.tecladocode.com/
